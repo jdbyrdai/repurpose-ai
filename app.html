@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RepurposeAI - Turn One Content Into Every Format</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; background: #0a0a0a; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        
+        /* Hero */
+        .hero { text-align: center; padding: 60px 20px 40px; color: white; }
+        .hero h1 { font-size: 3.5rem; margin-bottom: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { font-size: 1.3rem; color: #888; max-width: 600px; margin: 0 auto 30px; }
+        
+        /* App */
+        .app { background: #111; border-radius: 16px; padding: 30px; margin: 20px; border: 1px solid #222; }
+        .input-area { margin-bottom: 20px; }
+        .input-area label { display: block; color: #fff; margin-bottom: 10px; font-weight: 500; }
+        .input-area textarea { width: 100%; height: 150px; background: #1a1a1a; border: 1px solid #333; border-radius: 8px; padding: 15px; color: #fff; font-size: 14px; resize: vertical; }
+        .input-area textarea:focus { outline: none; border-color: #667eea; }
+        
+        .options { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+        .option-btn { background: #1a1a1a; border: 1px solid #333; color: #888; padding: 10px 20px; border-radius: 20px; cursor: pointer; transition: all 0.2s; }
+        .option-btn:hover { border-color: #667eea; color: #fff; }
+        .option-btn.active { background: #667eea; border-color: #667eea; color: white; }
+        
+        .generate-btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 15px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; width: 100%; }
+        .generate-btn:hover { opacity: 0.9; }
+        
+        .results { margin-top: 30px; display: none; }
+        .results.show { display: block; }
+        .result-card { background: #1a1a1a; border-radius: 12px; padding: 20px; margin-bottom: 15px; border: 1px solid #333; }
+        .result-card h4 { color: #667eea; margin-bottom: 10px; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
+        .result-card p { color: #ccc; white-space: pre-wrap; font-size: 14px; }
+        
+        .loading { display: none; text-align: center; padding: 40px; color: #667eea; }
+        .loading.show { display: block; }
+        
+        /* Pricing */
+        .pricing { text-align: center; padding: 40px 20px; color: white; }
+        .price { font-size: 3rem; font-weight: bold; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .price span { font-size: 1rem; color: #666; }
+        
+        /* Footer */
+        footer { text-align: center; padding: 30px; color: #444; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <section class="hero">
+            <h1>RepurposeAI</h1>
+            <p>Turn one piece of content into tweets, LinkedIn posts, newsletter, and threads — in seconds.</p>
+        </section>
+        
+        <div class="app">
+            <div class="input-area">
+                <label>Your Content (blog post, video transcript, or idea)</label>
+                <textarea id="contentInput" placeholder="Paste your content here..."></textarea>
+            </div>
+            
+            <div class="options">
+                <button class="option-btn active" data-format="tweets">🐦 Tweets</button>
+                <button class="option-btn active" data-format="linkedin">💼 LinkedIn</button>
+                <button class="option-btn active" data-format="newsletter">📧 Newsletter</button>
+                <button class="option-btn active" data-format="threads">📝 Threads</button>
+            </div>
+            
+            <button class="generate-btn" onclick="generate()">Generate Content</button>
+            
+            <div class="loading" id="loading">
+                ✨ Repurposing your content...
+            </div>
+            
+            <div class="results" id="results"></div>
+        </div>
+        
+        <section class="pricing">
+            <div class="price">$29<span>/month</span></div>
+            <p style="color: #666; margin-top: 10px;">Unlimited repurposing • Cancel anytime</p>
+        </section>
+    </div>
+    
+    <footer>
+        &copy; 2026 RepurposeAI. All rights reserved.
+    </footer>
+    
+    <script>
+        const buttons = document.querySelectorAll('.option-btn');
+        buttons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                btn.classList.toggle('active');
+            });
+        });
+        
+        async function generate() {
+            const content = document.getElementById('contentInput').value;
+            if (!content.trim()) {
+                alert('Please enter some content');
+                return;
+            }
+            
+            const formats = [...document.querySelectorAll('.option-btn.active')].map(b => b.dataset.format);
+            if (formats.length === 0) {
+                alert('Select at least one format');
+                return;
+            }
+            
+            document.getElementById('loading').classList.add('show');
+            document.getElementById('results').classList.remove('show');
+            
+            // Simulated response - in production this calls an API
+            setTimeout(() => {
+                const results = {
+                    tweets: `🐦 Tweet 1: "${content.slice(0, 100)}..." 
+
+🧵 Here's what I learned about ${content.split(' ').slice(0, 3).join(' ')}:
+
+2/4
+
+[Thread continues...]
+
+→ Follow for more insights
+
+#${content.split(' ').find(w => w.length > 5) || 'Tech'}`,
+                    
+                    linkedin: `💡 Something interesting I came across:
+
+"${content.slice(0, 200)}..."
+
+This really resonated with me because it highlights an important point about ${content.split(' ').slice(0, 3).join(' ')}.
+
+What do you think? Have you experienced this in your own work?
+
+#${content.split(' ').find(w => w.length > 5) || 'Business'} #Growth #Learning`,
+                    
+                    newsletter: `📬 Welcome to this week's insights!
+
+Here's the thing about "${content.split(' ').slice(0, 5).join(' ')}":
+
+${content.slice(0, 300)}...
+
+🔑 Key Takeaway:
+The biggest opportunity isn't in doing more — it's in doing what matters.
+
+Until next week,
+
+— 
+
+P.S. What topic would you like me to cover next?`,
+                    
+                    threads: `🧵 THREAD: ${content.split(' ').slice(0, 5).join(' ').toUpperCase()}
+
+1/ Every week I explore ideas that challenge how we think about work and growth.
+
+2/ Today I want to share something that changed my perspective:
+
+"${content.slice(0, 150)}..."
+
+3/ The implication is clear:
+
+What if we've been approaching this wrong?
+
+4/ Here's what matters:
+
+→ Focus on impact, not activity
+→ Question assumptions
+→ Experiment constantly
+
+5/ That's the thread. 
+
+Follow for more. 🚀`
+                };
+                
+                let html = '';
+                formats.forEach(fmt => {
+                    if (results[fmt]) {
+                        html += `<div class="result-card"><h4>${fmt}</h4><p>${results[fmt]}</p></div>`;
+                    }
+                });
+                
+                document.getElementById('results').innerHTML = html;
+                document.getElementById('results').classList.add('show');
+                document.getElementById('loading').classList.remove('show');
+            }, 1500);
+        }
+    </script>
+</body>
+</html>
